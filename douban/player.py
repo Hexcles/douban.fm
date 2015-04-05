@@ -167,7 +167,7 @@ class MPlayer(Player):
 
     @property
     def time_pos(self):
-        songtime = self._send_command('get_time_pos', 'ANS_TIME_POSITION')
+        songtime = self._send_command('get_time_pos', 'ANS_TIME_POSITION=')
         if songtime:
             return int(round(float(songtime)))
         else:
@@ -209,12 +209,14 @@ class MPlayer(Player):
             except IOError:
                 return None
             #print output
-            split_output = output.split('=')
-            # print(split_output)
-            if len(split_output) == 2 and split_output[0].strip() == expect:
+            if output.startswith(expect):
                 # We found it
-                value = split_output[1]
+                value = output[len(expect):]
                 return value.strip()
+
+
+class MPlayer2(MPlayer):
+    _player_command = "mplayer2"
 
 
 def main():
